@@ -7,12 +7,19 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   // Explicit
+  final formKey = GlobalKey<FormState>();
+  String name, user, password;
 
   // Method
   Widget registerButton() {
     return IconButton(
       icon: Icon(Icons.cloud_upload),
-      onPressed: () {},
+      onPressed: () {
+        if (formKey.currentState.validate()) {
+          formKey.currentState.save();
+          print('name = $name, user = $user, password = $password');
+        }
+      },
     );
   }
 
@@ -26,6 +33,15 @@ class _RegisterState extends State<Register> {
         labelText: 'Display Name :',
         helperText: 'Type Your Name',
       ),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Please Fill Name in the Blank';
+        } else {
+          return null;
+        }
+      },onSaved: (String value){
+        name = value.trim();
+      },
     );
   }
 
@@ -39,6 +55,15 @@ class _RegisterState extends State<Register> {
         labelText: 'User :',
         helperText: 'Type Your User',
       ),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'กรุณา กรอก User ด้วย คะ';
+        } else {
+          return null;
+        }
+      },onSaved: (String value){
+        user = value.trim();
+      },
     );
   }
 
@@ -52,6 +77,15 @@ class _RegisterState extends State<Register> {
         labelText: 'Password :',
         helperText: 'Type Your Password',
       ),
+      validator: (String value) {
+        if (value.length < 6) {
+          return 'Password More 6 Charactor';
+        } else {
+          return null;
+        }
+      },onSaved: (String value){
+        password = value.trim();
+      },
     );
   }
 
@@ -63,13 +97,16 @@ class _RegisterState extends State<Register> {
         title: Text('Regisger'),
         actions: <Widget>[registerButton()],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(50.0),
-        children: <Widget>[
-          nameText(),
-          userText(),
-          passwordText(),
-        ],
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: EdgeInsets.all(50.0),
+          children: <Widget>[
+            nameText(),
+            userText(),
+            passwordText(),
+          ],
+        ),
       ),
     );
   }
