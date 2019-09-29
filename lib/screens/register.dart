@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Register extends StatefulWidget {
   @override
@@ -18,9 +21,25 @@ class _RegisterState extends State<Register> {
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
           print('name = $name, user = $user, password = $password');
+          registerThread();
         }
       },
     );
+  }
+
+  Future<void> registerThread()async{
+
+    String urlAPI = 'https://www.androidthai.in.th/sa/addDataMaster.php?isAdd=true&Name=$name&User=$user&Password=$password';
+
+    var response = await http.get(urlAPI);
+    var result = json.decode(response.body);
+    print('result = $result');
+
+    if (result.toString() == 'true') {
+      Navigator.of(context).pop();
+    }
+
+
   }
 
   Widget nameText() {
